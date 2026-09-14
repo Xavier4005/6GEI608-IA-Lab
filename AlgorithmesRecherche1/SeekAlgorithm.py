@@ -4,6 +4,8 @@ from puzzleNode import PuzzleNode
 from puzzleTree import PuzzleTree
 from abc import ABC, abstractmethod
 
+MATRIX_DIM = 2
+
 class SeekAlgorithm(ABC):
     _iteration_frontiere : list[(int,int)]
     _number_state_explore : int
@@ -20,6 +22,12 @@ class SeekAlgorithm(ABC):
     #Permet de générer les noeud enfant du noeud donnée. voir diabot cours 2 p.33
     def explore(self, node : PuzzleNode):
         # création du noeud en haut
+        if node.zero_position[1] < MATRIX_DIM:
+            new_data = node.data.copy()
+
+            new_data[node.zero_position[0], node.zero_position[1]] = [node.zero_position[0], node.zero_position[1] + 1]
+            [node.zero_position[0], node.zero_position[1] + 1] = 0
+            node.child_nodes.append(PuzzleNode(new_data, ))
         # création du noeud en bas
 
         # création du noeud a gauche
