@@ -28,6 +28,6 @@ class SeekAlgorithm:
 
         # création du noeud a droite
         pass
-    
-    def verify(self, node : PuzzleNode, objectif)
+
+    def verify(self, node : PuzzleNode, objectif):
         pass
