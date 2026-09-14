@@ -1,14 +1,13 @@
 #Xavier
 
-import PuzzleTree, PuzzleNode
+from puzzleNode import PuzzleNode
+from puzzleTree import PuzzleTree
 from abc import ABC, abstractmethod
 
-class SeekAlgorithm:
-
+class SeekAlgorithm(ABC):
     _iteration_frontiere : list[(int,int)]
     _number_state_explore : int
     _execute_time : float
-
 
     def __init__(self):
         return
@@ -21,7 +20,6 @@ class SeekAlgorithm:
     #Permet de générer les noeud enfant du noeud donnée. voir diabot cours 2 p.33
     def explore(self, node : PuzzleNode):
         # création du noeud en haut
-
         # création du noeud en bas
 
         # création du noeud a gauche

@@ -1,4 +1,4 @@
-import PuzzleNode
+from puzzleNode import PuzzleNode
 
 class PuzzleNode:
     _parent_node : PuzzleNode

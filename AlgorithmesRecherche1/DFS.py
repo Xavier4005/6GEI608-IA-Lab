@@ -1,6 +1,8 @@
 #Eliel
 
-import SeekAlgorithm, PuzzleTree, PuzzleNode
+from seekAlgorithm import SeekAlgorithm
+from puzzleTree import PuzzleTree
+from puzzleNode import PuzzleNode
 
 class DFS(SeekAlgorithm):
 
