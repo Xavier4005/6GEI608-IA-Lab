@@ -15,9 +15,19 @@ class SeekAlgorithm:
 
     @classmethod
     @abstractmethod
-    def seek(self, tree : PuzzleTree):
+    def seek(self, tree : PuzzleTree, objectif):
         pass
 
     #Permet de générer les noeud enfant du noeud donnée. voir diabot cours 2 p.33
     def explore(self, node : PuzzleNode):
+        # création du noeud en haut
+
+        # création du noeud en bas
+
+        # création du noeud a gauche
+
+        # création du noeud a droite
+        pass
+    
+    def verify(self, node : PuzzleNode, objectif)
         pass
