@@ -1,20 +1,22 @@
-from puzzleNode import PuzzleNode
-import array
+import numpy as np
+import numpy.typing as npt
+from typing import Self
+
 
 class PuzzleNode:
-    _data : array[int,int]
-    _parent_node : PuzzleNode
+    _data : npt.NDArray[np.int32]
+    _parent_node : Self | None
     _zero_position : tuple[int,int]
-    _child_nodes : list[PuzzleNode]
+    _child_nodes : list[Self]
 
-    def __init__(self, data : array[int,int], zero_position : tuple[int,int], parent_node : PuzzleNode):
+    def __init__(self, data : npt.NDArray[np.int32], zero_position : tuple[int,int], parent_node : Self | None):
         self._data = data
         self._zero_position = zero_position
         self._parent_node = parent_node
         self._child_nodes = list()
 
     @property
-    def data(self) -> array[int,int]:
+    def data(self) -> npt.NDArray[np.int32]:
         return self._data
 
     @property
@@ -22,9 +24,9 @@ class PuzzleNode:
         return self._zero_position
 
     @property
-    def parent_node(self) -> PuzzleNode:
+    def parent_node(self) -> Self | None:
         return self._parent_node
 
     @property
-    def child_nodes(self) -> list[PuzzleNode]:
+    def child_nodes(self) -> list[Self]:
         return self._child_nodes
