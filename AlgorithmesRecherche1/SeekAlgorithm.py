@@ -1,7 +1,7 @@
 #Xavier
 
-from puzzleNode import PuzzleNode
-from puzzleTree import PuzzleTree
+from PuzzleNode import PuzzleNode
+from PuzzleTree import PuzzleTree
 from abc import ABC, abstractmethod
 import numpy.typing as npt
 import numpy as np

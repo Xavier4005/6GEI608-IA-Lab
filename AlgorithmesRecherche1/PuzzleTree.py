@@ -1,4 +1,4 @@
-from puzzleNode import PuzzleNode
+from PuzzleNode import PuzzleNode
 
 class PuzzleTree :
     _root : PuzzleNode
