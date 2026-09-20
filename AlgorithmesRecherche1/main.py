@@ -2,13 +2,13 @@
 
 import sys
 from pathlib import Path
-from PuzzleNode import PuzzleNode
-from PuzzleTree import PuzzleTree
-from SeekAlgorithm import SeekAlgorithm
+from puzzleNode import PuzzleNode
+from puzzleTree import PuzzleTree
+from seekAlgorithm import SeekAlgorithm
 from IO import IO
-from BFS import BFS
-from DFS import DFS
-from IDF import IDF
+from bfs import BFS
+from dfs import DFS
+from idf import IDF
 import numpy.typing as npt
 import numpy as np
 
@@ -31,127 +31,9 @@ ALGORITHMES: dict[str, type[SeekAlgorithm]] = {
 
 NOMBRE_EXECUTIONS = 10
 
-ACTIONS = {
-    (-1, 0): "haut",
-    (1, 0): "bas",
-    (0, -1): "gauche",
-    (0, 1): "droite"
-}
-
-
-def chemin_actions(node: PuzzleNode) -> list[str]:
-    actions: list[str] = []
-
-    while node.parent_node is not None:
-        parent: PuzzleNode = node.parent_node
-
-        deplacement = (
-            node.zero_position[0] - parent.zero_position[0],
-            node.zero_position[1] - parent.zero_position[1]
-        )
-
-        actions.append(ACTIONS[deplacement])
-        node = parent
-
-    actions.reverse()
-
-    return actions
-
-
-def executer_une_fois(
-    Algo: type[SeekAlgorithm],
-    grille: npt.NDArray[np.int32]
-) -> tuple[list[str] | None, list[tuple[int, int]], int, float]:
-
-    zero_row, zero_col = np.argwhere(grille == 0)[0]
-
-    node = PuzzleNode(
-        grille.copy(),
-        (int(zero_row), int(zero_col)),
-        None
-    )
-
-    algo: SeekAlgorithm = Algo()
-
-    subnode: PuzzleNode | None = algo.seek(
-        PuzzleTree(node),
-        OBJECTIF
-    )
-
-    temps_execution: float = algo._execute_time
-    tailles_frontiere: list[tuple[int, int]] = algo._iteration_frontiere
-    nombre_etats: int = algo._number_state_explore
-
-    actions = chemin_actions(subnode) if subnode is not None else None
-
-    return actions, tailles_frontiere, nombre_etats, temps_execution
-
-
-def resoudre(fichier: Path) -> None:
-
-    print(f"\n===== {fichier.name} =====")
-
-    grille = IO.read_file(fichier)
-
-    print(grille)
-
-    for nom, Algo in ALGORITHMES.items():
-
-        print(f"\n{nom}")
-
-        actions = None
-
-        for execution in range(1, NOMBRE_EXECUTIONS + 1):
-
-            actions, tailles_frontiere, nombre_etats, temps_execution = executer_une_fois(
-                Algo,
-                grille
-            )
-
-            fichier_statistiques = IO.export_statistiques(
-                DOSSIER_RESULTATS,
-                fichier.stem,
-                nom,
-                execution,
-                tailles_frontiere,
-                nombre_etats,
-                temps_execution
-            )
-
-            print(
-                f"  exécution {execution:2d} : "
-                f"{nombre_etats} états explorés, "
-                f"{temps_execution:.3f} s -> "
-                f"{fichier_statistiques.relative_to(DOSSIER_PROJET)}"
-            )
-
-        if actions is None:
-            print("  Aucune solution : l'état objectif n'est pas atteignable")
-            continue
-
-        dossier = DOSSIER_RESULTATS / fichier.stem / nom
-        fichier_solution = dossier / "solution.txt"
-
-        IO.write_solution(
-            fichier_solution,
-            actions
-        )
-
-        if len(actions) <= 40:
-            print(
-                f"  Solution en {len(actions)} actions : "
-                f"{', '.join(actions)}"
-            )
-        else:
-            print(
-                f"  Solution en {len(actions)} actions -> "
-                f"{fichier_solution.relative_to(DOSSIER_PROJET)}"
-            )
-
 
 def main():
 
-    print("Hello from algorithmesrecherche1!")
 
     if len(sys.argv) > 1:
         fichiers = [
@@ -170,7 +52,15 @@ def main():
         return
 
     for fichier in fichiers:
-        resoudre(fichier)
+        algo_type: type[SeekAlgorithm]
+        for algo_type in ALGORITHMES.values():
+            i : int = 0
+            for i in range(NOMBRE_EXECUTIONS):
+                algo : SeekAlgorithm = algo_type()
+                initial_state : npt.NDArray[np.int32] = IO.read_file(fichier.absolute())
+                tree : PuzzleTree = PuzzleTree(PuzzleNode(initial_state))
+                algo.seek(tree, OBJECTIF)
+                IO.write_file(DOSSIER_RESULTATS / fichier.stem / ("Resultat" + algo_type.__name__) / (str(i+1) + ".txt"), algo._iteration_frontiere, algo._number_state_explore, algo._execute_time)
 
 
 if __name__ == "__main__":
