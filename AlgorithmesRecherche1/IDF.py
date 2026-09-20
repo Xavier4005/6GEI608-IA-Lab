@@ -20,6 +20,8 @@ class IDF(SeekAlgorithm):
                 frontiere: deque[tuple[PuzzleNode, int]] = deque()
                 frontiere.append((tree.root, 0))
 
+                visites: set[bytes] = {tree.root.data.tobytes()}
+
                 while len(frontiere) != 0:
                     self._iteration_frontiere.append((iteration, len(frontiere)))
                     iteration += 1
@@ -35,10 +37,10 @@ class IDF(SeekAlgorithm):
                     if actual_depth < current_max_depth:
                         self.explore(actual_node)
                         for child in actual_node.child_nodes:
-                            # Évite de retourner immédiatement au nœud parent (cycle de longueur 2)
-                            if actual_node.parent_node is not None and np.array_equal(child.data, actual_node.parent_node.data):
-                                continue
-                            frontiere.append((child, actual_depth + 1))
+                            cle: bytes = child.data.tobytes()
+                            if cle not in visites:
+                                visites.add(cle)
+                                frontiere.append((child, actual_depth + 1))
 
             return None
 
