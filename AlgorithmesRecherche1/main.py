@@ -3,7 +3,7 @@
 import sys
 from pathlib import Path
 from PuzzleNode import PuzzleNode
-from puzzleTree import PuzzleTree
+from PuzzleTree import PuzzleTree
 from SeekAlgorithm import SeekAlgorithm
 from IO import IO
 from BFS import BFS
