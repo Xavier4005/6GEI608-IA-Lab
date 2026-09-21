@@ -1,8 +1,8 @@
 #Eliel
 
-from seekAlgorithm import SeekAlgorithm
+from SeekAlgorithm import SeekAlgorithm
 from puzzleTree import PuzzleTree
-from puzzleNode import PuzzleNode
+from PuzzleNode import PuzzleNode
 from timeit import default_timer as timer
 import numpy.typing as npt
 import numpy as np

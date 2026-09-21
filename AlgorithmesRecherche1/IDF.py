@@ -1,8 +1,8 @@
 #Xavier
 
-from seekAlgorithm import SeekAlgorithm
+from SeekAlgorithm import SeekAlgorithm
 from puzzleTree import PuzzleTree
-from puzzleNode import PuzzleNode
+from PuzzleNode import PuzzleNode
 from timeit import default_timer as timer
 import numpy.typing as npt
 import numpy as np
@@ -12,7 +12,7 @@ from copy import deepcopy
 class IDF(SeekAlgorithm):
 
     def seek(self, tree: PuzzleTree, objectif: npt.NDArray[np.int32]) -> PuzzleNode | None:
-            max_depth: int = 1000
+            max_depth: int = 40
             iteration: int = 0
             start: float = timer()
 
