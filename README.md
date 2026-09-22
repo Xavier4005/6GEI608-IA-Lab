@@ -1,16 +1,35 @@
-Fonctionnement du programme
-  1 - Installer les dépendane a l'aide du fichier requirement.txt
-  2 - Éxécuter main.py
-  
-Modification possible
-  A la base le programme éxécute 10 fois les 3 algorythme sur toute les fichier présent dans input-Ex1 qui ce situe dnas le dosier parent du dosier d'éxécution pour changer cela il suffit de modifier la variable global : DOSSIER_PROJET = Path(__file__).parent
-  DOSSIER_INPUTS = DOSSIER_PROJET.parent / "input-Ex1".
-  Il est aussi possible d'éxécuter les 3 algorythme 10 fois sur un seul fichier en donnant en argument le chemin ver le fichier a main.py
+# Documentation du programme
 
-Explication des fichier d'algorythme
-  Les fichier résultat des algorythme ce retrouve dans le dossier resultats /Nom fichier original/essais.txt dans le même dosier que main.py
+## Fonctionnement du programme
 
-  Le fichier de chaque algorythme est coposer de la même mannière 
-  Les première ligne contienne : Numéros ittération Nombre d'élément dans la list frontiêre
-  L'avant dernière ligne contien le nombre d'éxploration éffectuer
-  La dernière ligne contien le temps d'éxécution
+1. **Installer les dépendances** à l'aide du fichier `requirements.txt`
+2. **Exécuter** `main.py`
+
+---
+
+## Modifications possibles
+
+Par défaut, le programme exécute **10 fois** les 3 algorithmes sur tous les fichiers présents dans `input-Ex1` (situé dans le dossier parent du dossier d'exécution). 
+
+### 1. Modifier le dossier source
+Pour changer ce comportement, il suffit de modifier les variables globales suivantes :
+
+```python
+DOSSIER_PROJET = Path(__file__).parent
+DOSSIER_INPUTS = DOSSIER_PROJET.parent / "input-Ex1"
+```
+
+### 2. Exécuter sur un seul fichier
+Il est également possible d'exécuter les 3 algorithmes 10 fois sur un seul fichier en passant le chemin vers le fichier en argument à `main.py`.
+
+---
+
+## Explication des fichiers d'algorithme
+
+Les fichiers de résultats des algorithmes se trouvent dans le répertoire :
+`resultats/[Nom du fichier original]/essais.txt` (dans le même dossier que `main.py`).
+
+Le fichier de chaque algorithme est composé de la même manière :
+* **Premières lignes :** `Numéro d'itération` | `Nombre d'éléments dans la liste frontière`
+* **Avant-dernière ligne :** Nombre d'explorations effectuées
+* **Dernière ligne :** Temps d'exécution
