@@ -35,8 +35,7 @@ Le fichier de chaque algorithme est composé de la même manière :
 * **Dernière ligne :** Temps d'exécution
 
 ## Ce qui a été appris pendant le laboratoire
-Les nouvelles informations apprises lors de ce laboratoire concernent la manière d'implémenter en Python trois algorithmes de recherche (**BFS**, **DFS** et **IDDFS**) ainsi que leurs différences :
-
-* **BFS (Breadth-First Search) :** Il permet de trouver le chemin le plus court (avec un nombre d'étapes réduit).
-* **DFS (Depth-First Search) :** Il ne donne pas forcément le meilleur chemin ; les parcours trouvés sont souvent très longs.
-* **IDDFS (Iterative Deepening Depth-First Search) :** Il donne quasiment le même chemin que BFS. Cependant, lorsqu'aucun résultat n'est disponible, il prend plus de temps pour confirmer l'absence de solution, car il doit explorer le graphe jusqu'à la profondeur maximale à chaque itération.
+J'ai appris à formuler le 8-puzzle comme un problème de recherche : un espace d'états, des actions correspondant aux déplacements de la case vide, un état initial et un test d'objectif.
+J'ai appris à reconstruire le chemin des actions en remontant les liens de parenté depuis le nœud solution jusqu'à la racine.
+J'ai compris que les trois algorithmes ne diffèrent que par la structure de la frontière : une file (FIFO) pour le BFS, une pile (LIFO) pour le DFS, et une pile avec limite de profondeur croissante pour l'IDF.
+J'ai constaté que le BFS et l'IDF sont optimaux, avec des solutions de alors que le DFS produit des chemins très long.
