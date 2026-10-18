@@ -9,6 +9,7 @@ from IO import IO
 from BFS import BFS
 from DFS import DFS
 from IDF import IDF
+from AStar import AStar
 import numpy.typing as npt
 import numpy as np
 
@@ -31,9 +32,10 @@ OBJECTIF = np.array([
 ], dtype=np.int32)
 
 ALGORITHMES: dict[str, type[SeekAlgorithm]] = {
-    "BFS": BFS,
-    "DFS": DFS,
-    "IDF": IDF
+   # "BFS": BFS,
+   # "DFS": DFS,
+    #"IDF": IDF,
+    "AStar": AStar
 }
 
 NOMBRE_EXECUTIONS = 10
