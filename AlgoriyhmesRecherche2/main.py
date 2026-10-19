@@ -61,8 +61,8 @@ DOSSIER_RESULTATS : Path = Path(__file__).parent / "resultats"
 NB_EXECUTIONS : int = 10
 
 ALGORITHMES : dict[str, SeekAlgorithme] = {
-    "hill_climbing": HillClimbingSearch(),
-    #"geneic" : GeneticSearch()
+    #"hill_climbing": HillClimbingSearch(),
+    "geneic" : GeneticSearch()
 }
 
 

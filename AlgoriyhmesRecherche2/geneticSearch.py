@@ -14,7 +14,7 @@ class GeneticSearch(SeekAlgorithme):
         freez_number : set[tuple[int, int]] = [tuple(c) for c in indices]
         return freez_number
     
-    def generate_sudoku_aleatoire(sudoku : npt.NDArray[np.int32], lignes : npt.NDArray, colonnes : npt.NDArray) -> npt.NDArray[np.int32]:
+    def generate_sudoku_aleatoire(self,sudoku : npt.NDArray[np.int32], lignes : npt.NDArray, colonnes : npt.NDArray) -> npt.NDArray[np.int32]:
         sudoku_rempli : npt.NDArray[np.int32] = np.random.randint(1, 10, sudoku.shape, np.int32)
         sudoku_rempli[lignes, colonnes] = sudoku[lignes, colonnes]
 
@@ -35,13 +35,14 @@ class GeneticSearch(SeekAlgorithme):
         # Variable de contrôle
         nombre_individue : int = 1000
         pourcentage_elitisme : int = 5
-        nomtre_maximal_iteration : int = 10000
+        nomtre_maximal_iteration : int = 100000
 
         frezz_number = self.generate_frezz_number(sudoku)
 
         population_actuelle : list[Individu] = list[Individu]()
 
         start: float = timer()
+        historique : list[tuple[int, int]] = list[tuple[int, int]]()
 
         # Transformation en tableux une seul fois pour la génération de toute les 1000 individue de la généation 1
         lignes_brut , colonnes_brut = zip(*frezz_number)
@@ -84,6 +85,7 @@ class GeneticSearch(SeekAlgorithme):
         meilleure_fitness_precedente : int = population_actuelle[0].fitness
         compteur_stagnation : int = 0
 
+        historique.append((0, population_actuelle[0].fitness))
 
         nombre_iteration : int = 1
         while population_actuelle[0].fitness != 0 and nombre_iteration < nomtre_maximal_iteration:
@@ -143,6 +145,7 @@ class GeneticSearch(SeekAlgorithme):
 
                 compteur_stagnation = 0
 
+            historique.append((nombre_iteration, meilleure_fitness_actuelle))
             nombre_iteration += 1
 
 
@@ -151,6 +154,6 @@ class GeneticSearch(SeekAlgorithme):
         execute_time = end - start
 
         if population_actuelle[0].fitness == 0:
-            return population_actuelle[0].sudoku
+            return Resultat(population_actuelle[0].sudoku, population_actuelle[0].sudoku, execute_time, nombre_iteration, 0, True, 0, historique)
         else:
-            return None
+            return Resultat(None, population_actuelle[0].sudoku, execute_time, nombre_iteration, 0, False, population_actuelle[0].fitness, historique)
