@@ -3,7 +3,6 @@ import numpy as np
 import numpy.typing as npt
 
 class SeekAlgorithme(ABC):
-
     def get_number_conflic(self,sudoku : npt.NDArray[np.int32]) -> int:
         lignes : list[int] = [0] * 9
         colonnes : list[int] = [0] * 9
