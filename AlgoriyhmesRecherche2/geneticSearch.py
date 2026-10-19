@@ -5,8 +5,15 @@ from timeit import default_timer as timer
 import random
 from seekAlgorithme import SeekAlgorithme
 from individu import Individu
+from resultat import Resultat
 
 class GeneticSearch(SeekAlgorithme):
+    def generate_frezz_number(self,sudoku : npt.NDArray[np.int32]) -> set[tuple[int,int]]:
+        indices = np.argwhere(sudoku != 0)
+
+        freez_number : set[tuple[int, int]] = [tuple(c) for c in indices]
+        return freez_number
+    
     def generate_sudoku_aleatoire(sudoku : npt.NDArray[np.int32], lignes : npt.NDArray, colonnes : npt.NDArray) -> npt.NDArray[np.int32]:
         sudoku_rempli : npt.NDArray[np.int32] = np.random.randint(1, 10, sudoku.shape, np.int32)
         sudoku_rempli[lignes, colonnes] = sudoku[lignes, colonnes]
@@ -24,11 +31,13 @@ class GeneticSearch(SeekAlgorithme):
         enfant = np.where(masque_2d, parent_A, parent_B)
         return enfant
 
-    def genetic_resolve(self,sudoku : npt.NDArray[np.int32], frezz_number : set[tuple[int,int]]) -> npt.NDArray[np.int32] | None:
+    def genetic_resolve(self,sudoku : npt.NDArray[np.int32]) -> Resultat:
         # Variable de contrôle
         nombre_individue : int = 1000
         pourcentage_elitisme : int = 5
         nomtre_maximal_iteration : int = 10000
+
+        frezz_number = self.generate_frezz_number(sudoku)
 
         population_actuelle : list[Individu] = list[Individu]()
 

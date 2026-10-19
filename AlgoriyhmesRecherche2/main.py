@@ -1,10 +1,10 @@
-from collections.abc import Callable
 from pathlib import Path
 import numpy as np
 import numpy.typing as npt
-from resultat import Resultat
 from IO import IO 
-
+from seekAlgorithme import SeekAlgorithme
+from hillClimbingSearch import HillClimbingSearch
+from geneticSearch import GeneticSearch
 
 
 
@@ -60,8 +60,9 @@ DOSSIER_RESULTATS : Path = Path(__file__).parent / "resultats"
 
 NB_EXECUTIONS : int = 10
 
-ALGORITHMES : dict[str, Callable[..., Resultat]] = {
-    "hill_climbing": None,
+ALGORITHMES : dict[str, SeekAlgorithme] = {
+    "hill_climbing": HillClimbingSearch(),
+    #"geneic" : GeneticSearch()
 }
 
 
@@ -69,14 +70,21 @@ def main():
     puzzles = IO.read_all(DOSSIER_PUZZLES)
     print(f"{len(puzzles)} puzzle(s) chargé(s) depuis « {DOSSIER_PUZZLES} »")
 
-    for nom_algorithme, resoudre in ALGORITHMES.items():
+    for nom_algorithme, algorithme in ALGORITHMES.items():
         print(f"\n=== {nom_algorithme} ===")
 
         for puzzle in puzzles:
             difficulte = puzzle.metadonnees.get("Difficulty", "?")
 
             for numero in range(1, NB_EXECUTIONS + 1):
-                res = resoudre(puzzle.grille, graine=numero)
+
+                if type(algorithme) is HillClimbingSearch:
+                    res = algorithme.hill_climbing_resolve(puzzle.grille, graine=numero)
+                elif type(algorithme) is GeneticSearch:
+                    res = algorithme.genetic_resolve(puzzle.grille)
+                else:
+                    raise RuntimeError(f"Algorithme inconnue")
+                    
 
                 if res.resolu and not est_valide(res.solution, puzzle.grille):
                     raise RuntimeError(f"Solution invalide : {puzzle.nom}, exécution {numero}")
