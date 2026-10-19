@@ -1,0 +1,22 @@
+ . 3 . | . 4 . | 7 6 .
+ 6 9 . | 7 . . | . 3 8
+ 8 . . | 1 . . | . . .
+-------|-------|-------
+ . . . | . 8 . | 1 9 .
+ 4 . . | 6 . 7 | . . 3
+ . 7 8 | . 9 . | . . .
+-------|-------|-------
+ . . . | . . 2 | . . 4
+ 9 2 . | . . 1 | . 7 5
+ . 1 3 | . 7 . | . 2 .
+
+Number of Givens: 32
+Number of Singles: 49
+Number of Hidden Singles: 0
+Number of Naked Pairs: 0
+Number of Hidden Pairs: 0
+Number of Pointing Pairs/Triples: 0
+Number of Box/Line Intersections: 0
+Number of Guesses: 0
+Number of Backtracks: 0
+Difficulty: Simple
