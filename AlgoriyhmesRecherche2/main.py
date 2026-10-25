@@ -62,7 +62,7 @@ NB_EXECUTIONS : int = 10
 
 ALGORITHMES : dict[str, SeekAlgorithme] = {
     "hill_climbing": HillClimbingSearch(),
-    #"geneic" : GeneticSearch()
+    "geneic" : GeneticSearch()
 }
 
 
