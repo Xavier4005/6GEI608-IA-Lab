@@ -68,6 +68,6 @@ Le fichier **`solution.txt`** contient la solution partielle ou totale trouvée 
 
 ## Ce qui a été appris pendant le laboratoire
 
-Nous avons appris que l'utilisation d'algorithmes informés dotés de bonnes heuristiques permet de réduire drastiquement le nombre d'étapes et le temps de résolution des problèmes par rapport aux algorithmes non informés. La comparaison de l'algorithme A* avec BFS, DFS et IDA* montre clairement que A* est supérieur pour résoudre les problèmes de recherche d'états.
+Nous avons appris que l'utilisation d'algorithmes informés dotés de bonnes heuristiques permet de réduire drastiquement le nombre d'étapes et le temps de résolution des problèmes par rapport aux algorithmes non informés. La comparaison de l'algorithme A* avec BFS, DFS et IDF cela montre clairement que A* est supérieur pour résoudre les problèmes de recherche d'états.
 
 Ensuite, nous avons pu voir qu'il était possible de résoudre un problème plus complexe comme celui du sudoku à l'aide d'algorithmes tels que le *Hill Climbing* et l'algorithme génétique. Cependant, nous avons aussi constaté que ces derniers sont très inconstants dans la résolution : ils peuvent rester bloqués sur des minima locaux pendant longtemps et être obligés de redémarrer souvent pour atteindre la solution optimale. Cela peut avoir un impact majeur sur le temps de convergence de l'algorithme.
