@@ -1,43 +1,20 @@
 import numpy as np
 import numpy.typing as npt
 from timeit import default_timer as timer
-from math import inf
 import random
 from resultat import Resultat
-from itertools import combinations
 from seekAlgorithme import SeekAlgorithme
 
-MAX_REDEMARRAGES : int = 100          # nombre maximal de redémarrages aléatoires
+Case = tuple[int, int]
+Mouvement = tuple[int, int, int]
+
 
 class HillClimbingSearch(SeekAlgorithme):
 
-
-    def doublons(self,valeurs : npt.NDArray[np.int32]) -> int:
-
-        return 9 - len(set(valeurs.tolist()))
-
-
-    def bloc_de(self,grille : npt.NDArray[np.int32], ligne : int, colonne : int) -> npt.NDArray[np.int32]:
-        l0, c0 = 3 * (ligne // 3), 3 * (colonne // 3)
-        return grille[l0:l0 + 3, c0:c0 + 3].ravel()
-
-
-    def cout_local(self,grille : npt.NDArray[np.int32], ligne : int, c1 : int, c2 : int) -> int:
-
-        cout = self.doublons(grille[:, c1]) + self.doublons(grille[:, c2])
-        cout += self.doublons(self.bloc_de(grille, ligne, c1))
-        if c1 // 3 != c2 // 3:
-            cout += self.doublons(self.bloc_de(grille, ligne, c2))
-        return cout
-
-
-    def cases_libres_par_ligne(self,sudoku : npt.NDArray[np.int32]) -> list[list[int]]:
-
+    def cases_libres_par_ligne(self, sudoku: npt.NDArray[np.int32]) -> list[list[int]]:
         return [[c for c in range(9) if sudoku[l, c] == 0] for l in range(9)]
 
-
-    def remplir_lignes(self,sudoku : npt.NDArray[np.int32], libres : list[list[int]]) -> npt.NDArray[np.int32]:
-
+    def etat_initial(self, sudoku: npt.NDArray[np.int32], libres: list[list[int]]) -> npt.NDArray[np.int32]:
         grille = sudoku.copy()
         for l in range(9):
             presents = set(sudoku[l][sudoku[l] != 0].tolist())
@@ -46,80 +23,91 @@ class HillClimbingSearch(SeekAlgorithme):
             grille[l, libres[l]] = manquants
         return grille
 
+    def conflits_case(self, grille: npt.NDArray[np.int32], ligne: int, colonne: int) -> int:
+        v = grille[ligne, colonne]
+        l0, c0 = 3 * (ligne // 3), 3 * (colonne // 3)
+        return int((grille[ligne] == v).sum()
+                   + (grille[:, colonne] == v).sum()
+                   + (grille[l0:l0 + 3, c0:c0 + 3] == v).sum()) - 3
 
-    def successeurs(self,libres : list[list[int]]) -> list[tuple[int, int, int]]:
-        return [(l, c1, c2) for l in range(9) for c1, c2 in combinations(libres[l], 2)]
+    def nombre_conflits(self, grille: npt.NDArray[np.int32]) -> int:
+        return sum(self.conflits_case(grille, l, c) for l in range(9) for c in range(9)) // 2
 
+    def valeur(self, grille: npt.NDArray[np.int32]) -> int:
+        return -self.nombre_conflits(grille)
 
-    def meilleur_successeur(self,grille : npt.NDArray[np.int32],
-                            mouvements : list[tuple[int, int, int]]) -> tuple[int, tuple[int, int, int]]:
-        meilleur_delta : int = 10 ** 9
-        meilleurs : list[tuple[int, int, int]] = []
+    def variables_en_conflit(self, grille: npt.NDArray[np.int32], libres: list[list[int]]) -> list[Case]:
+        return [(l, c) for l in range(9) if len(libres[l]) >= 2
+                for c in libres[l] if self.conflits_case(grille, l, c) > 0]
+
+    def successeurs(self, grille: npt.NDArray[np.int32], libres: list[list[int]]) -> list[Mouvement]:
+        mouvements: set[Mouvement] = set()
+        for l, c in self.variables_en_conflit(grille, libres):
+            for c2 in libres[l]:
+                if c2 != c:
+                    mouvements.add((l, min(c, c2), max(c, c2)))
+        return list(mouvements)
+
+    def variation_conflits(self, grille: npt.NDArray[np.int32], ligne: int, c1: int, c2: int) -> int:
+        avant = self.conflits_case(grille, ligne, c1) + self.conflits_case(grille, ligne, c2)
+        grille[ligne, c1], grille[ligne, c2] = grille[ligne, c2], grille[ligne, c1]
+        apres = self.conflits_case(grille, ligne, c1) + self.conflits_case(grille, ligne, c2)
+        grille[ligne, c1], grille[ligne, c2] = grille[ligne, c2], grille[ligne, c1]
+        return apres - avant
+
+    def meilleur_successeur(self, current: npt.NDArray[np.int32], valeur_current: int,
+                            mouvements: list[Mouvement]) -> tuple[int, Mouvement]:
+        meilleure_valeur: int = -10 ** 9
+        meilleurs: list[Mouvement] = []
 
         for l, c1, c2 in mouvements:
-            avant = self.cout_local(grille, l, c1, c2)
-            grille[l, c1], grille[l, c2] = grille[l, c2], grille[l, c1]
-            delta = self.cout_local(grille, l, c1, c2) - avant
-            grille[l, c1], grille[l, c2] = grille[l, c2], grille[l, c1]
-
-            if delta < meilleur_delta:
-                meilleur_delta, meilleurs = delta, [(l, c1, c2)]
-            elif delta == meilleur_delta:
+            valeur_successeur = valeur_current - self.variation_conflits(current, l, c1, c2)
+            if valeur_successeur > meilleure_valeur:
+                meilleure_valeur, meilleurs = valeur_successeur, [(l, c1, c2)]
+            elif valeur_successeur == meilleure_valeur:
                 meilleurs.append((l, c1, c2))
 
-        return meilleur_delta, random.choice(meilleurs)
+        return meilleure_valeur, random.choice(meilleurs)
 
+    def hill_climbing(self, sudoku: npt.NDArray[np.int32],
+                      historique: list[tuple[int, int]]) -> tuple[npt.NDArray[np.int32], int, int, int]:
+        libres = self.cases_libres_par_ligne(sudoku)
 
-    def monter(self,grille : npt.NDArray[np.int32], mouvements : list[tuple[int, int, int]],
-            historique : list[tuple[int, int]], iteration_depart : int) -> tuple[int, int, int]:
-        cout = self.get_number_conflic(grille)
+        current = self.etat_initial(sudoku, libres)
+        valeur_current = self.valeur(current)
+
         iterations = 0
         voisins = 0
-        historique.append((iteration_depart, cout))
+        historique.append((iterations, -valeur_current))
 
-        while mouvements:
-            delta, (l, c1, c2) = self.meilleur_successeur(grille, mouvements)
+        while True:
+            mouvements = self.successeurs(current, libres)
+            if not mouvements:
+                return current, valeur_current, iterations, voisins
+
+            valeur_neighbor, (l, c1, c2) = self.meilleur_successeur(current, valeur_current, mouvements)
             voisins += len(mouvements)
+            neighbor = current.copy()
+            neighbor[l, c1], neighbor[l, c2] = neighbor[l, c2], neighbor[l, c1]
 
-            if delta >= 0:
-                break
+            if valeur_neighbor <= valeur_current:
+                return current, valeur_current, iterations, voisins
 
-            grille[l, c1], grille[l, c2] = grille[l, c2], grille[l, c1]
-            cout += delta
+            current, valeur_current = neighbor, valeur_neighbor
             iterations += 1
-            historique.append((iteration_depart + iterations, cout))
+            historique.append((iterations, -valeur_current))
 
-        return cout, iterations, voisins
-
-
-    def hill_climbing_resolve(self, sudoku : npt.NDArray[np.int32], graine : int | None = None) -> Resultat:
-
+    def hill_climbing_resolve(self, sudoku: npt.NDArray[np.int32], graine: int | None = None) -> Resultat:
         if graine is not None:
             random.seed(graine)
 
-        libres = self.cases_libres_par_ligne(sudoku)
-        mouvements = self.successeurs(libres)
+        start: float = timer()
+        historique: list[tuple[int, int]] = []
 
-        start : float = timer()
-        iterations : int = 0
-        voisins : int = 0
-        meilleure_grille = sudoku.copy()
-        meilleur_cout : float = inf
-        historique : list[tuple[int, int]] = []
+        grille, valeur, iterations, voisins = self.hill_climbing(sudoku, historique)
 
-        for redemarrage in range(MAX_REDEMARRAGES):
-            grille = self.remplir_lignes(sudoku, libres)
-            cout, it, v = self.monter(grille, mouvements, historique, iterations)
-            iterations += it
-            voisins += v
+        conflits = -valeur
+        resolu = conflits == 0
 
-            if cout < meilleur_cout:
-                meilleur_cout = cout
-                meilleure_grille = grille.copy()
-
-            if cout == 0:
-                return Resultat(grille, grille, timer() - start, iterations, redemarrage,
-                                True, 0, historique, voisins)
-
-        return Resultat(None, meilleure_grille, timer() - start, iterations, MAX_REDEMARRAGES,
-                        False, int(meilleur_cout), historique, voisins)
+        return Resultat(grille if resolu else None, grille, timer() - start, iterations, 0,
+                        resolu, conflits, historique, voisins)
