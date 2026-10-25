@@ -1,3 +1,5 @@
+# Vidéo de démonstration [Visionner la vidéo Panopto](https://uqac.ca.panopto.com/Panopto/Pages/Viewer.aspx?id=5c030e41-a871-4294-8617-b4ee018333ca)
+
 # Documentation du programme
 
 ## Fonctionnement du programme
