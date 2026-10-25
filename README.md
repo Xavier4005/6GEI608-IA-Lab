@@ -2,14 +2,14 @@
 
 ## Fonctionnement du programme
 
-1. **Installer les dépendances** à l'aide du fichier `requirements.txt`
-2. **Exécuter** `main.py`
+1. **Installer les dépendances** à l'aide du fichier `requirements.txt`.
+2. **Exécuter** `main.py`.
 
 ---
 
-## Modifications possibles
+## AlgorithmesRecherche1
 
-Par défaut, le programme exécute **10 fois** les 3 algorithmes sur tous les fichiers présents dans `input-Ex1` (situé dans le dossier parent du dossier d'exécution). 
+Par défaut, le programme exécute **10 fois** les 4 algorithmes sur tous les fichiers présents dans `input-Ex1` (situé dans le dossier parent du dossier d'exécution). 
 
 ### 1. Modifier le dossier source
 Pour changer ce comportement, il suffit de modifier les variables globales suivantes :
@@ -20,22 +20,54 @@ DOSSIER_INPUTS = DOSSIER_PROJET.parent / "input-Ex1"
 ```
 
 ### 2. Exécuter sur un seul fichier
-Il est également possible d'exécuter les 3 algorithmes 10 fois sur un seul fichier en passant le chemin vers le fichier en argument à `main.py`.
+Il est également possible d'exécuter les 4 algorithmes 10 fois sur un seul fichier en passant le chemin vers celui-ci en argument à `main.py`.
 
 ---
 
-## Explication des fichiers d'algorithme
+## AlgorithmesRecherche2
+
+Le programme exécute **10 fois** les 2 algorithmes sur tous les fichiers présents dans `puzzles` (situé dans le dossier d'exécution). 
+
+---
+
+## Explication des fichiers de résultats
+
+### AlgorithmesRecherche1
 
 Les fichiers de résultats des algorithmes se trouvent dans le répertoire :
 `resultats/[Nom du fichier original]/essais.txt` (dans le même dossier que `main.py`).
 
-Le fichier de chaque algorithme est composé de la même manière :
-* **Premières lignes :** `Numéro d'itération` | `Nombre d'éléments dans la liste frontière`
-* **Avant-dernière ligne :** Nombre d'explorations effectuées
-* **Dernière ligne :** Temps d'exécution
+Le fichier de chaque algorithme est composé de la manière suivante :
+- **Premières lignes :** `Numéro d'itération` | `Nombre d'éléments dans la liste frontière`
+- **Avant-dernière ligne :** Nombre d'explorations effectuées
+- **Dernière ligne :** Temps d'exécution
+
+### AlgorithmesRecherche2
+
+Les fichiers de résultats des algorithmes se trouvent dans le répertoire :
+`resultats/[Nom du fichier original]/[nom_algorithme]/`
+
+Ces résultats sont constitués de deux fichiers :
+- `execution.txt`
+- `solution.txt`
+
+Le fichier **`execution.txt`** contient toutes les itérations de l'algorithme, le nombre de conflits à chaque exécution ainsi que le nombre total d'exécutions. Il est composé de la manière suivante :
+- **Premières lignes :** `Numéro d'itération` | `Nombre d'éléments dans la liste frontière`
+- **Avant-dernière ligne :** Nombre d'explorations effectuées
+- **Dernière ligne :** Temps d'exécution
+
+Le fichier **`solution.txt`** contient la solution partielle ou totale trouvée pour le sudoku. Il est composé de la manière suivante :
+- **Première ligne :** Nom du sudoku
+- **Deuxième ligne :** Difficulté du sudoku
+- **Troisième ligne :** Indique s'il est résolu ou non
+- **Quatrième ligne :** Nombre de fois que l'algorithme a redémarré totalement
+- **Cinquième ligne :** Nombre final de conflits
+- **Dernières lignes :** Résultat obtenu
+
+---
 
 ## Ce qui a été appris pendant le laboratoire
-J'ai appris à formuler le 8-puzzle comme un problème de recherche : un espace d'états, des actions correspondant aux déplacements de la case vide, un état initial et un test d'objectif.
-J'ai appris à reconstruire le chemin des actions en remontant les liens de parenté depuis le nœud solution jusqu'à la racine.
-J'ai compris que les trois algorithmes ne diffèrent que par la structure de la frontière : une file (FIFO) pour le BFS, une pile (LIFO) pour le DFS, et une pile avec limite de profondeur croissante pour l'IDF.
-J'ai constaté que le BFS et l'IDF sont optimaux, avec des solutions de alors que le DFS produit des chemins très long.
+
+Nous avons appris que l'utilisation d'algorithmes informés dotés de bonnes heuristiques permet de réduire drastiquement le nombre d'étapes et le temps de résolution des problèmes par rapport aux algorithmes non informés. La comparaison de l'algorithme A* avec BFS, DFS et IDA* montre clairement que A* est supérieur pour résoudre les problèmes de recherche d'états.
+
+Ensuite, nous avons pu voir qu'il était possible de résoudre un problème plus complexe comme celui du sudoku à l'aide d'algorithmes tels que le *Hill Climbing* et l'algorithme génétique. Cependant, nous avons aussi constaté que ces derniers sont très inconstants dans la résolution : ils peuvent rester bloqués sur des minima locaux pendant longtemps et être obligés de redémarrer souvent pour atteindre la solution optimale. Cela peut avoir un impact majeur sur le temps de convergence de l'algorithme.
